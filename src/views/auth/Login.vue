@@ -22,9 +22,9 @@
         <h5 class="card-title text-left">Iniciar sesión</h5>
         <input v-model="user.email" class="form-control" type="text" placeholder="Correo Electronico"><br>
         <input v-model="user.password" class="form-control" type="password" placeholder="Contraseña"><br>
-        <a href=""><p style="text-align:right; width:100%">¿Olvidaste tu contraseña?</p></a>
+        <a href="/lost-password" target="_blank"><p style="text-align:right; width:100%">¿Olvidaste tu contraseña?</p></a>
         <button class="btn btn-dark" style="width:100%" @click="submit()">Iniciar sesión</button><br>
-       <p style="width:100%; padding-top:15px">¿No tienes una cuenta?  <a href="">Registrate aquí</a></p>
+       <p style="width:100%; padding-top:15px">¿No tienes una cuenta?  <a href="/register" target="_blank">Registrate aquí</a></p>
         </div>
     </div>
   </div>
@@ -95,17 +95,17 @@ async getUser(uid){
                 console.log(error)
             }
         },
-        async submit() {
-          firebase
-            .auth()
-            .signInWithEmailAndPassword(this.user.email, this.user.password)
-            .then(data => {
-              this.$router.replace({ name: "Dashboard" });
-            })
-            .catch(err => {
-              this.error = err.message;
-            });
-        }
+  async submit() {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(this.user.email, this.user.password)
+      .then(data => {
+        this.$router.replace({ name: "Dashboard" });
+      })
+      .catch(err => {
+        this.error = err.message;
+      });
+  }
 }
 }
 </script>

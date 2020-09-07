@@ -17,7 +17,7 @@ const configOptions = {
   measurementId: "G-WNH96PE1C4"
 };
 
-firebase.initializeApp(configOptions);
+let app = firebase.initializeApp(configOptions);
 
 firebase.auth().onAuthStateChanged(user => {
   store.dispatch("fetchUser", user);
