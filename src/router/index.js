@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/auth/Login'
+import Register from '../views/auth/Register'
+import LostPassword from '../views/auth/LostPassword'
+import { auth } from 'firebase'
 
 Vue.use(VueRouter)
 
@@ -9,12 +12,25 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: {
+        autenticado: true,
+    }
   },
   {
     path: '/login',
     name: 'login',
     component: Login
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register
+  },
+  {
+    path: '/lost-password',
+    name: 'lost-password',
+    component: LostPassword
   },
 
   {
@@ -33,4 +49,16 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+    let user = auth.currentUser
+
+
+    if (to.matched.some(record => record.meta.autenticado)) {
+        if (!user) {
+            next({ name: 'login' })
+        }
+    } else {
+        next()
+    }
+})
 export default router
