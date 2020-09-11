@@ -3,6 +3,7 @@
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
+      <button @click="submit()"></button>
     </div>
     <router-view/>
   </div>
@@ -29,4 +30,35 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
 </style>
+
+<script>
+
+import axios from 'axios';
+
+export default {
+  data(){
+    return{
+        user:{
+            email: '',
+            password: '',
+        }
+    }
+  },
+  methods:{
+      async submit(){
+
+            try {
+
+                let response = await axios.post('http://localhost:4000/mail', this.user);
+                console.log(response)
+                alert("Registration Was successful");
+                this.loader = false;
+            } catch (err) {
+                alert("Something Went Wrong");
+            }
+      }
+  }
+}
+</script>
