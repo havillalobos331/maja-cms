@@ -31,7 +31,7 @@
         <input v-model="user.password" class="form-control" type="password" placeholder="Contraseña"><br>
         <a href="/lost-password" target="_blank"><p style="text-align:right; width:100%">¿Olvidaste tu contraseña?</p></a>
         <button class="btn btn-green" style="width:100%" @click="submit()">Iniciar sesión</button><br>
-       <p style="width:100%; padding-top:15px">¿No tienes una cuenta?  <a href="/register">Registrate aquí</a></p>
+       <p style="width:100%; padding-top:15px">¿No tienes una cuenta?  <a href="/register" target="_blank">Registrate aquí</a></p>
         </div>
     </div>
   </div>

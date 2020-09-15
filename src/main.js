@@ -2,19 +2,24 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import * as firebase from "firebase";
+import * as firebase from "firebase/app";
+import 'firebase/auth';
+import { VuejsDatatableFactory } from 'vuejs-datatable';
+
+ 
+Vue.use( VuejsDatatableFactory );
 
 Vue.config.productionTip = false;
 
 const configOptions = {
-  apiKey: "AIzaSyD86bsttqYGTyqspgkoJWhmeX5XHRwYIjo",
-  authDomain: "majalca-58d71.firebaseapp.com",
-  databaseURL: "https://majalca-58d71.firebaseio.com",
-  projectId: "majalca-58d71",
-  storageBucket: "majalca-58d71.appspot.com",
-  messagingSenderId: "809034328621",
-  appId: "1:809034328621:web:13a62a507ec27b87d326a4",
-  measurementId: "G-WNH96PE1C4"
+   apiKey: "AIzaSyD86bsttqYGTyqspgkoJWhmeX5XHRwYIjo",
+    authDomain: "majalca-58d71.firebaseapp.com",
+    databaseURL: "https://majalca-58d71.firebaseio.com",
+    projectId: "majalca-58d71",
+    storageBucket: "majalca-58d71.appspot.com",
+    messagingSenderId: "809034328621",
+    appId: "1:809034328621:web:899204c146ce6de4d326a4",
+    measurementId: "G-RTYSEJ8Q6D"
 };
 
 let app = firebase.initializeApp(configOptions);

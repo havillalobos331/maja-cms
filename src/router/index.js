@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/auth/Login'
 import Register from '../views/auth/Register'
 import LostPassword from '../views/auth/LostPassword'
+import Reservations from '../views/auth/Reservations'
 import { auth } from 'firebase'
 
 Vue.use(VueRouter)
@@ -21,6 +22,11 @@ Vue.use(VueRouter)
     path: '/login',
     name: 'login',
     component: Login
+  },
+  {
+    path: '/reservations',
+    name: 'reservations',
+    component: Reservations
   },
   {
     path: '/register',
