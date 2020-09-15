@@ -4,11 +4,9 @@ import router from './router'
 import store from './store'
 import * as firebase from "firebase/app";
 import 'firebase/auth';
-import 'firebase/firestore';
 import { VuejsDatatableFactory } from 'vuejs-datatable';
 
-
-
+ 
 Vue.use( VuejsDatatableFactory );
 
 Vue.config.productionTip = false;
@@ -26,17 +24,12 @@ const configOptions = {
 
 let app = firebase.initializeApp(configOptions);
 
-export const db = firebase.firestore();
-
 firebase.auth().onAuthStateChanged(user => {
   store.dispatch("fetchUser", user);
 });
 
-
-
 new Vue({
   router,
   store,
-  vuetify,
   render: h => h(App)
 }).$mount('#app')

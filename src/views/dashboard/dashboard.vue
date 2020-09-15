@@ -36,7 +36,7 @@ button{
 
 }
 .background-example{
-  background-image: url('');
+  background-image: url('../../assets/ejemplo-dash.jpg');
 }
 p{
   margin: 0 10px;
@@ -49,12 +49,12 @@ p{
 
       <div class="dashboard-object">
         <p class="dashboard-title">Visitantes por Edad</p>
-        <img alt="Vue logo" src="" style="width:100%;">
+        <img alt="Vue logo" src="../../assets/ejemplo-dash.jpg" style="width:100%;">
       </div>
 
       <div class="dashboard-object">
         <p class="dashboard-title">Areas mas Visitadas</p>
-        <img alt="Vue logo" src="" style="width:100%;">
+        <img alt="Vue logo" src="../../assets/ejemplo-dash.jpg" style="width:100%;">
       </div>
 
       <div class="dashboard-object">
@@ -64,7 +64,7 @@ p{
           <p class="dashboard-title">Semana</p>
           <p class="dashboard-title">Mes</p>
         </div>
-        <img alt="Vue logo" src="" style="width:100%;">
+        <img alt="Vue logo" src="../../assets/ejemplo-dash.jpg" style="width:100%;">
       </div>
 
     </div>
@@ -72,11 +72,11 @@ p{
     <div class="dashboard-row">
       <div class="dashboard-object">
         <p class="dashboard-title">Actividades mas comunes</p>
-        <img alt="Vue logo" src="" style="width:100%;">
+        <img alt="Vue logo" src="../../assets/ejemplo-dash.jpg" style="width:100%;">
       </div>
       <div class="dashboard-object">
         <p class="dashboard-title">Cantidad de Areas Acupadas Actualmente</p>
-        <img alt="Vue logo" src="" style="width:100%;">
+        <img alt="Vue logo" src="../../assets/ejemplo-dash.jpg" style="width:100%;">
       </div>
       <div class="dashboard-object">
         <p class="dashboard-title">De donde nos visitan?</p>
