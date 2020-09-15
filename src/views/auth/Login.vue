@@ -48,6 +48,7 @@
 
 import firebase from "firebase";
 
+
 export default {
 
 data(){
@@ -110,7 +111,8 @@ async getUser(uid){
         this.$router.replace({ name: "Dashboard" });
       })
       .catch(err => {
-        this.error = err.message;
+       console.log(err.message);
+        alert('usuario o contraseña incorrectos')
       });
   }
 }
