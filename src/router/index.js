@@ -5,8 +5,7 @@ import Login from '../views/auth/Login'
 import Register from '../views/auth/Register'
 import LostPassword from '../views/auth/LostPassword'
 import Reservations from '../views/auth/Reservations'
-import Dashboard from '../views/dashboard/dashboard'
-import { auth, db } from 'firebase'
+import { auth } from 'firebase'
 
 Vue.use(VueRouter)
 
@@ -28,11 +27,6 @@ Vue.use(VueRouter)
     path: '/reservations',
     name: 'reservations',
     component: Reservations
-  },
-  {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: Dashboard
   },
   {
     path: '/register',
