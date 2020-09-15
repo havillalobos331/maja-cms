@@ -1,118 +1,134 @@
 <style>
-.contenedor{
-    width: 100vw;
-    height: 100vh;
-    padding-top: 20vh;
+button{
+  background-color: #707070;
+  color: white;
+  border-color: #707070;
+  border-radius: 10px;
+  padding: 2px 10px;
+  border-style: solid;
 }
-.btn-green{
-    background:#558A16;
-    color:white;
-}
-.btn-green:hover{
-    background:#3d660a;
-    color:white;
-    font-weight: bold;
+.main{
+  background-color: #f5f9fc;
+  width: 100%;
+  height: 100vw;
 }
 
+.dashboard-title{
+  border-bottom-style: solid;
+  border-color: #efefef;
+  width: 100%;
+  margin: 0;
+  padding: 10px 10px;
+  margin: 10px 0;
+
+}
+.dashboard-row{
+  display:flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+.dashboard-object{
+  margin: 30px;
+  padding: 10px 0;
+  border-style: none;
+  width: 350px;
+  background-color: #ffffff;
+
+}
+.background-example{
+  background-image: url('');
+}
+p{
+  margin: 0 10px;
+}
 </style>
 <template>
-<section>
-    <div class="contenedor" style="background:url('img/bglogin.png'); background-size:auto 100%; background-position:bottom">
+  <div class="main">
 
-<div class="card text-center col-8 offset-2" style="">
-  <div class="card-body" style="padding:0">
-    <div class="row" style="padding:0">
-        <div class="col-6" style="overflow:hidden; padding:0; background:url('img/imglogin.png'); background-size: cover; background-repeat:no-repeat">
-           
+    <div class="dashboard-row">
+
+      <div class="dashboard-object">
+        <p class="dashboard-title">Visitantes por Edad</p>
+        <img alt="Vue logo" src="" style="width:100%;">
+      </div>
+
+      <div class="dashboard-object">
+        <p class="dashboard-title">Areas mas Visitadas</p>
+        <img alt="Vue logo" src="" style="width:100%;">
+      </div>
+
+      <div class="dashboard-object">
+        <div style="display: flex;">
+          <p class="dashboard-title">Ocupacion por: </p>
+          <p class="dashboard-title">Dia</p>
+          <p class="dashboard-title">Semana</p>
+          <p class="dashboard-title">Mes</p>
         </div>
-        <div class="col-6" style="padding:60px 30px">
-        <h5 class="card-title text-left">Iniciar sesión</h5>
-        <input v-model="user.email" class="form-control" type="text" placeholder="Correo Electronico"><br>
-        <input v-model="user.password" class="form-control" type="password" placeholder="Contraseña"><br>
-        <a href="/lost-password" target="_blank"><p style="text-align:right; width:100%">¿Olvidaste tu contraseña?</p></a>
-        <button class="btn btn-green" style="width:100%" @click="submit()">Iniciar sesión</button><br>
-       <p style="width:100%; padding-top:15px">¿No tienes una cuenta?  <a href="/register" target="_blank">Registrate aquí</a></p>
+        <img alt="Vue logo" src="" style="width:100%;">
+      </div>
+
+    </div>
+
+    <div class="dashboard-row">
+      <div class="dashboard-object">
+        <p class="dashboard-title">Actividades mas comunes</p>
+        <img alt="Vue logo" src="" style="width:100%;">
+      </div>
+      <div class="dashboard-object">
+        <p class="dashboard-title">Cantidad de Areas Acupadas Actualmente</p>
+        <img alt="Vue logo" src="" style="width:100%;">
+      </div>
+      <div class="dashboard-object">
+        <p class="dashboard-title">De donde nos visitan?</p>
+        <div class="dashboard-row">
+          <p>Chihuahua - 15</p>
         </div>
+        <div class="dashboard-row">
+          <p>Mexico DF - 2</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-row">
+
+      <div class="dashboard-object">
+        <p class="dashboard-title">Ingresos Mensuales</p>
+        <p>$23456</p>
+        <button style="float:right;">Detalles</button>
+      </div>
+
+      <div class="dashboard-object">
+        <p class="dashboard-title">Reportes de Guardias</p>
+        <div class="dashboard-row">
+          <p>reporte</p> <button style="float:right;">Detalles</button>
+        </div>
+        <div class="dashboard-row">
+          <p>reporte</p> <button style="float:right;">Detalles</button>
+        </div>
+        <div class="dashboard-row">
+          <p>reporte</p> <button style="float:right;">Detalles</button>
+        </div>
+        <div class="dashboard-row">
+          <p>reporte</p> <button style="float:right;">Detalles</button>
+        </div>
+      </div>
+
+      <div class="dashboard-object">
+        <p class="dashboard-title">Reseñas de Usuarios</p>
+        <div class="dashboard-row">
+          <p>reseña</p> <button style="float:right;">Detalles</button>
+        </div>
+        <div class="dashboard-row">
+          <p>reseña</p> <button style="float:right;">Detalles</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="dashboard-row">
+
     </div>
   </div>
-
-</div>
-
-
-
-    </div>
-</section>
 </template>
-
 <script>
-
-import firebase from "firebase";
-
-export default {
-
-data(){
-return{
-    user:{
-        email: '',
-        password: '',
-    }
-}
-},
-methods:{
-async createUser(){
-            try {
-                let response = await firebase.auth().createUserWithEmailAndPassword({
-                    email: this.user.email,
-                    password: this.user.password
-                })
-
-                if(response){
-
-                    let user = {
-                            uid: response.uid,
-                            name: this.user.name,
-                            email: this.user.email,
-                        }
-
-                    if(response.additionalUserInfo.isNewUser){
-                        await firebase.firestore.collection('users').doc(user.uid).set(user)
-                    }
-
-                    this.getUser(response.uid)
-
-                }
-            } catch(e) {
-                alert('error');
-                console.log(e);
-            }
-        },
-
-async getUser(uid){
-            try {
-                let response = await firebase.firestore().collection('users').doc(uid).get()
-
-                if(response.exists){
-                    let user = response.data()
-
-                    //router push
-                    this.$router.replace({ name: 'Home' })
-                }
-            } catch (error) {
-
-                console.log(error)
-            }
-        },
-  async submit() {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(this.user.email, this.user.password)
-      .then(data => {
-        this.$router.replace({ name: "Dashboard" });
-      })
-      .catch(err => {
-        this.error = err.message;
-      });
-  }
-}
-}
 </script>
