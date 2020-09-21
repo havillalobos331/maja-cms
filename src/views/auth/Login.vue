@@ -107,9 +107,10 @@ async getUser(uid){
       .auth()
       .signInWithEmailAndPassword(this.user.email, this.user.password)
       .then(data => {
-        this.$router.replace({ name: "Dashboard" });
+        this.$router.replace({ name: "Reservations" });
       })
       .catch(err => {
+          alert('usuario o contraseña incorrecto')
         this.error = err.message;
       });
   }

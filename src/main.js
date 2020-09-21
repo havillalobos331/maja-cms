@@ -5,6 +5,19 @@ import store from './store'
 import * as firebase from "firebase/app";
 import 'firebase/auth';
 import { VuejsDatatableFactory } from 'vuejs-datatable';
+import * as VueGoogleMaps from "vue2-google-maps";
+import VueSweetalert2 from 'vue-sweetalert2';
+ 
+// If you don't need the styles, do not connect
+import 'sweetalert2/dist/sweetalert2.min.css';
+ 
+Vue.use(VueSweetalert2);
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: "AIzaSyDp3Ud3SixagW8bJOwtosy5bBMB5JRNS_k",
+  },
+});
 
  
 Vue.use( VuejsDatatableFactory );
