@@ -92,7 +92,7 @@ Vue.use(VueRouter)
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  hash: true,
   base: process.env.BASE_URL,
   routes
 })
