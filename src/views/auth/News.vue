@@ -129,6 +129,18 @@
                       <label for="exampleInputEmail1">Cuerpo de la noticia</label>
                       <textarea class="form-control" v-model="newNews.cuerpo"  cols="30" rows="5"></textarea>
                   </div>
+                <div class="form-group">
+                      <label for="exampleInputEmail1">Foto de Noticia</label>
+                      <input class="form-control" type="file" @change="previewImage" accept="image/*">
+                      <p>Progress: {{uploadValue.toFixed()+"%"}}
+                      <progress id="progress" :value="uploadValue" max="100" ></progress>  </p>
+                  </div>
+                  <div v-if="imageData!=null">
+        <img class="preview" style="width:120px" :src="picture">
+        <br>
+      <button style="display:none" @click="onUpload">Upload</button>
+    </div>
+                  
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -213,6 +225,9 @@ export default {
         extract:null,
         body:null,
       },
+      imageData:null,
+      picture:null,
+       uploadValue: 0
     };
   },
   filters: {
@@ -248,6 +263,24 @@ export default {
         console.log(error);
       }
     },
+    previewImage(event) {
+      this.uploadValue=0;
+      this.picture=null;
+      this.imageData = event.target.files[0];
+    },
+    onUpload(){
+      this.picture=null;
+      const storageRef=firebase.storage().ref('this.imageData.name').put(this.imageData);
+      storageRef.on('state_changed',snapshot=>{
+        this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+      }, error=>{console.log(error.message)},
+      ()=>{this.uploadValue=100;
+        storageRef.snapshot.ref.getDownloadURL().then((url)=>{
+          this.picture =url;
+        });
+      }
+      );
+    },
     getNewsToEdit(id){
       this.newsSelect= [];
       db.collection('news').where('id', '==', id).get().then((doc)=> {
@@ -274,18 +307,37 @@ export default {
 
     },
 
-    async addNew(){
+     async addNew(){
 
+      this.picture=null;
+      const storageRef= firebase.storage().ref('this.imageData.name').put(this.imageData);
+      storageRef.on('state_changed',snapshot=>{
+        this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+      }, error=>{console.log(error.message)},
+      ()=>{this.uploadValue=100;
+        storageRef.snapshot.ref.getDownloadURL().then((url)=>{
+          this.picture = url;
+          //Este alert arroja el url de la imagen
+
+          alert(this.picture);
+  
       let response = db.collection("news").add({
         title:this.newNews.titulo,
         extract:this.newNews.resumen,
         body:this.newNews.cuerpo,
-        image:'https://www.mexicodesconocido.com.mx/sites/default/files/nodes/inline/parque-nacional-cumbres-de-majalca-chihuahua-ng.jpg',
+        image:this.picture,
         status:'Activa',
         date:new Date(),
-      }).then(()=> {if(response){db.collection('news')
+      }).then(()=> /*{if(response){db.collection('news')
                                     .doc(response.id)
-                                    .update({ id: response.id })}}, this.getNews(), this.$swal('Noticia Guardada con exito!'), $('#modalReservacion').modal('hide')) 
+                                    .update({ id: response.id })}},*/ this.getNews(), this.$swal('Noticia Guardada con exito!'), $('#modalReservacion').modal('hide')) 
+          
+        });
+      }
+      );
+
+       //Si lo pongo aqui arroja null
+       
     },
     deleteNews(id){
 
