@@ -9,40 +9,40 @@
         />
         <p style="font-weight:bold; padding-top:10px">Administrador</p>
 
-       <a href="dashboard"> <div class="container-options">
+       <a href="#/dashboard"> <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-dashboard"></i> Dashboard
           </div>
         </div></a>
-        <a href="users">
+        <a href="#/users">
         <div class="container-options-active">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-user"></i> Usuarios
           </div>
         </div>
         </a>
-        <a href="areas">
+        <a href="#/areas">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-map-marker-alt"></i> Áreas
           </div>
         </div>
         </a>
-        <a href="reservations">
+        <a href="#/reservations">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-clock"></i> Reservaciones
           </div>
         </div>
         </a>
-        <a href="events">
+        <a href="#/events" style="display: none;">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-ticket"></i> Eventos
           </div>
         </div>
         </a>
-        <a href="news">
+        <a href="#/news">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-newspaper"></i> Noticias
@@ -102,8 +102,8 @@
             <td>{{user.email}}</td>
             <td>{{user.role}}</td>
             <td><span v-if="user.completeProfile">Completo</span><span v-else>Pendiente</span></td>
-            <td><div style="width:100px;"><button style="font-size:13px" class="btn btn-info" @click="getUserToEdit(user.uid)"><i class="fa fa-edit"></i>Editar</button>
-            <button style="font-size:13px" class="btn btn-info" @click="deleteUser(user.uid)"><i class="fa fa-trash"></i>Eliminar</button></div></td>
+            <td><div style="width:100px;"><button style="font-size:13px" class="btn btn-info" @click="getUserToEdit(user.uid)"><i class="fa fa-edit"></i></button>
+            <button style="font-size:13px; margin-left:10px" class="btn btn-danger" @click="deleteUser(user.uid)"><i class="fa fa-trash"></i></button></div></td>
             </tr>
           </tbody>
         </table>

@@ -75,40 +75,40 @@ text-decoration: none;
         />
         <p style="font-weight:bold; padding-top:10px">Administrador</p>
 
-       <a href="dashboard"> <div class="container-options">
+       <a href="#/dashboard"> <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-dashboard"></i> Dashboard
           </div>
         </div></a>
-        <a href="users">
+        <a href="#/users">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-user"></i> Usuarios
           </div>
         </div>
         </a>
-        <a href="areas">
+        <a href="#/areas">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-map-marker-alt"></i> Áreas
           </div>
         </div>
         </a>
-        <a href="reservations">
+        <a href="#/reservations">
         <div class="container-options-active">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-clock"></i> Reservaciones
           </div>
         </div>
         </a>
-        <a href="events">
+        <a href="#/events" style="display: none;">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-ticket"></i> Eventos
           </div>
         </div>
         </a>
-        <a href="news">
+        <a href="#/news">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-newspaper"></i> Noticias
@@ -143,7 +143,7 @@ text-decoration: none;
             <tr>
               <th>Visitante</th>
               <th>Área</th>
-              <th>Fecha Entrada</th>
+              <th>Periodo Reserva</th>
               <th>Estado</th>
               <th>Opciones</th>
             </tr>
@@ -285,23 +285,31 @@ export default {
     async getReservations() {
       this.reservations = [];
       try {
+        
         let response = await db
           .collection("reservations")
           .get()
           .then((doc) => {
             doc.forEach((res) => {
-              this.getUserName(res.data().user);
-              
 
+              var userNameG = db.collection("users").where("uid", "==", res.data().user).get().then((doc1) => {
+            doc1.forEach((res1) => {
+
+              var areaNameG = db.collection("ubications").where("id", "==", res.data().ubication).get().then((doc2) => {
+            doc2.forEach((res2) => {
+             
               let objt = {
-                userName:this.getUserName(res.data()),
-                areaName:this.getAreaName(res.data().ubication),
-                fecha:res.data().dateOne+' - '+res.data().dateTwo,
+                userName:res1.data().name,
+                areaName:res2.data().name,
+                fecha:moment(res.data().dateOne.toDate()).format('lll')+' - '+moment(res.data().dateTwo.toDate()).format('lll'),
                 estado:res.data().payment,
               }
-              
-                console.log(objt);
+              console.log(objt);
               this.reservations.push(objt);
+                  });
+                });
+              });
+            });    
             });
           });
 

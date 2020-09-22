@@ -16,6 +16,7 @@ button{
 .dashboard-title{
   border-bottom-style: solid;
   border-color: #efefef;
+  font-weight: bold;
   width: 100%;
   margin: 0;
   padding: 10px 10px;
@@ -33,7 +34,10 @@ button{
   border-style: none;
   width: 350px;
   background-color: #ffffff;
-
+}
+.dashboard-object-content{
+  width: 100%;
+  height: 100%;
 }
 .background-example{
   background-image:none;
@@ -53,40 +57,40 @@ p{
         />
         <p style="font-weight:bold; padding-top:10px">Administrador</p>
 
-       <a href="dashboard"> <div class="container-options-active">
+       <a href="#/dashboard"> <div class="container-options-active">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-dashboard"></i> Dashboard
           </div>
         </div></a>
-        <a href="users">
+        <a href="#/users">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-user"></i> Usuarios
           </div>
         </div>
         </a>
-        <a href="areas">
+        <a href="#/areas">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-map-marker-alt"></i> Áreas
           </div>
         </div>
         </a>
-        <a href="reservations">
+        <a href="#/reservations">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-clock"></i> Reservaciones
           </div>
         </div>
         </a>
-        <a href="events">
+        <a href="#/events" style="display: none;">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-ticket"></i> Eventos
           </div>
         </div>
         </a>
-        <a href="news">
+        <a href="#/news">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-newspaper"></i> Noticias
@@ -108,13 +112,33 @@ p{
     <div class="dashboard-row">
 
       <div class="dashboard-object">
-        <p class="dashboard-title">Visitantes por Edad</p>
-        <img alt="Vue logo" src="" style="width:100%;">
+      <div class="dashboard-object-content" style="background:url('img/bg-element-dashboard.png'); background-size: 100% auto; background-position:bottom; padding-bottom:35px; background-repeat:no-repeat">
+        <p class="dashboard-title">Visitantes por Edad<br><span style="font-style:italic; font-size:10px">(Ultimo Mes)</span></p>
+        <table class="table table-striped" style="width:90%; text-align:left; margin-left:5%; font-size:14px">
+          <tr>
+            <td>Mayores de 18:</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>Menores de 18:</td>
+            <td>0</td>
+          </tr>
+        </table>
+        </div>
       </div>
 
       <div class="dashboard-object">
-        <p class="dashboard-title">Areas mas Visitadas</p>
-        <img alt="Vue logo" src="" style="width:100%;">
+      <div class="dashboard-object-content" style="background:url('img/bg-element-dashboard.png'); background-size: 100% auto; background-position:bottom; padding-bottom:35px; background-repeat:no-repeat">
+        <p class="dashboard-title">Áreas Más Visitadas<br><span style="font-style:italic; font-size:10px">(Ultimo Mes)</span></p>
+        <div style="height: 150px; overflow: scroll;">
+        <table class="table table-striped" style="width:90%; text-align:left; margin-left:5%; font-size:14px">
+          <tr v-for="area in areas" :key="area.id">
+            <td>{{area.name}}</td>
+            <td>0</td>
+          </tr>
+        </table>
+        </div>
+        </div>
       </div>
 
       <div class="dashboard-object">
@@ -130,21 +154,67 @@ p{
     </div>
 
     <div class="dashboard-row">
+
       <div class="dashboard-object">
-        <p class="dashboard-title">Actividades mas comunes</p>
-        <img alt="Vue logo" src="" style="width:100%;">
-      </div>
-      <div class="dashboard-object">
-        <p class="dashboard-title">Cantidad de Areas Acupadas Actualmente</p>
-        <img alt="Vue logo" src="" style="width:100%;">
-      </div>
-      <div class="dashboard-object">
-        <p class="dashboard-title">De donde nos visitan?</p>
-        <div class="dashboard-row">
-          <p>Chihuahua - 15</p>
+      <div class="dashboard-object-content" style="background:url('img/bg-element-dashboard.png'); background-size: 100% auto; background-position:bottom; padding-bottom:35px; background-repeat:no-repeat">
+        <p class="dashboard-title">Actividades más comunes<br><span style="font-style:italic; font-size:10px">(Ultimo Mes)</span></p>
+       <div style="height: 150px; overflow: scroll;">
+        <table class="table table-striped" style="width:90%; text-align:left; margin-left:5%; font-size:14px">
+          <tr>
+            <td>Acampar:</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>Ciclismo</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>Senderismo</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>Otro</td>
+            <td>0</td>
+          </tr>
+        </table>
+       </div>
         </div>
-        <div class="dashboard-row">
-          <p>Mexico DF - 2</p>
+      </div>
+
+      <div class="dashboard-object">
+      <div class="dashboard-object-content" style="background:url('img/bg-element-dashboard.png'); background-size: 100% auto; background-position:bottom; padding-bottom:35px; background-repeat:no-repeat">
+        <p class="dashboard-title">Cantidad de Areas Acupadas Actualmente</p>
+       <div style="height: 150px; padding-top:30px">
+        <h2>2/3</h2>
+        <a href="/#/areas" class="btn btn-info">Áreas</a>
+       </div>
+        </div>
+      </div>
+
+      
+      <div class="dashboard-object">
+      <div class="dashboard-object-content" style="background:url('img/bg-element-dashboard.png'); background-size: 100% auto; background-position:bottom; padding-bottom:35px; background-repeat:no-repeat">
+        <p class="dashboard-title">¿De Donde Nos Visitan?<br><span style="font-style:italic; font-size:10px">(Ultimo Mes)</span></p>
+       <div style="height: 150px; overflow: scroll;">
+        <table class="table table-striped" style="width:90%; text-align:left; margin-left:5%; font-size:14px">
+          <tr>
+            <td>Chihuahua</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>Aldama</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>Delicias</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>Otro</td>
+            <td>0</td>
+          </tr>
+        </table>
+       </div>
         </div>
       </div>
     </div>
@@ -152,9 +222,9 @@ p{
     <div class="dashboard-row">
 
       <div class="dashboard-object">
-        <p class="dashboard-title">Ingresos Mensuales</p>
-        <p>$23456</p>
-        <button style="float:right;">Detalles</button>
+        <p class="dashboard-title">Ingresos del Mes</p>
+        <p style="font-weight:bold; font-size:25px; padding-top:35px">$0.00</p>
+        <button class="btn btn-info">Detalles</button>
       </div>
 
       <div class="dashboard-object">

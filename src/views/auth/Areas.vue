@@ -47,40 +47,40 @@
         />
         <p style="font-weight:bold; padding-top:10px">Administrador</p>
 
-       <a href="dashboard"> <div class="container-options">
+       <a href="#/dashboard"> <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-dashboard"></i> Dashboard
           </div>
         </div></a>
-        <a href="users">
+        <a href="#/users">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-user"></i> Usuarios
           </div>
         </div>
         </a>
-        <a href="areas">
+        <a href="#/areas">
         <div class="container-options-active">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-map-marker-alt"></i> Áreas
           </div>
         </div>
         </a>
-        <a href="reservations">
+        <a href="#/reservations">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-clock"></i> Reservaciones
           </div>
         </div>
         </a>
-        <a href="events">
+        <a href="#/events" style="display: none;">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-ticket"></i> Eventos
           </div>
         </div>
         </a>
-        <a href="news">
+        <a href="#/news">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-newspaper"></i> Noticias

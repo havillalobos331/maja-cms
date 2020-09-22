@@ -9,33 +9,33 @@
         />
         <p style="font-weight:bold; padding-top:10px">Administrador</p>
 
-       <a href="dashboard"> <div class="container-options">
+       <a href="#/dashboard"> <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-dashboard"></i> Dashboard
           </div>
         </div></a>
-        <a href="users">
+        <a href="#/users">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-user"></i> Usuarios
           </div>
         </div>
         </a>
-        <a href="areas">
+        <a href="#/areas">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-map-marker-alt"></i> Áreas
           </div>
         </div>
         </a>
-        <a href="reservations">
+        <a href="#/reservations">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-clock"></i> Reservaciones
           </div>
         </div>
         </a>
-        <a href="events">
+        <a href="#/events" style="display: none;">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-ticket"></i> Eventos
@@ -47,7 +47,7 @@
             <i class="fa fa-newspaper"></i> Noticias
           </div>
         </div>
-        <a href="news">
+        <a href="#/news">
         <div class="container-options">
           <div style="color:#A0A0A0; font-size:22px">
             <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
@@ -72,9 +72,10 @@
             >Nueva Noticia</button>
           </div>
         </div>
-        <table class="table-style" style="width:70vw">
+        <table class="table-style table table-stripped" style="width:70vw">
           <thead>
             <tr>
+              <th>Imagen</th>
               <th>Titulo</th>
               <th>Resumen</th>
               <th>Fecha Creación</th>
@@ -82,7 +83,17 @@
               <th>Opciones</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+            <tr v-for="noticia in news" :key="noticia.id"> 
+              <td><img style="width:80px ;" v-bind:src="noticia.image"></td>
+              <td>{{noticia.title}}</td>
+              <td>{{noticia.extract}}</td>
+              <td>{{noticia.date}}</td>
+              <td>{{noticia.status}}</td>
+              <td><div style="width:100px;"><button style="font-size:13px" class="btn btn-info" @click="getNewsToEdit(noticia.id)"><i class="fa fa-edit"></i></button>
+            <button style="font-size:13px; margin-left:10px" class="btn btn-danger" @click="deleteNews(noticia.id)"><i class="fa fa-trash"></i></button></div></td>
+            </tr>
+          </tbody>
         </table>
       </div>
 
@@ -96,7 +107,7 @@
         aria-hidden="true"
       >
         <div class="modal-dialog" role="document">
-            <form>
+            <form @submit.prevent="addNew">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Nueva Noticia</h5>
@@ -106,66 +117,81 @@
             </div>
             <div class="modal-body text-left">
 
-              
                   <div class="form-group">
-                      <label for="exampleInputEmail1">Selecciona un Area</label>
-                      <select class="form-control" name="area" id="area">
-                          <option v-for="area in areas" :key="area.id" :value="areas.id">{{area.name}}</option>
-                      </select>
+                      <label for="">Titulo</label>
+                      <input class="form-control" placeholder="Titulo" type="text" v-model="newNews.titulo">
                   </div>
                   <div class="form-group">
-                      <label for="exampleInputEmail1">Selecciona un Usuario</label>
-                      <select class="form-control" name="usuario" id="usuario">
-                          <option v-for="user in users" :key="user.id" :value="user.id">{{user.name}} - {{user.email}}</option>
-                      </select>
-                  </div>
-                <div class="form-group row" style="padding:15px">
-                  <label for="" class="col-md-12">Fecha Desde</label>
-                  <input  class="form-control col-md-6" name="date1" type="date">
-                  <input class="form-control col-md-6" name="time1" type="time">
-                </div>
-                <div class="form-group row" style="padding:15px">
-                  <label for="" class="col-md-12">Fecha Hasta</label>
-                  <input  class="form-control col-md-6" name="date2" type="date">
-                  <input class="form-control col-md-6" name="time2" type="time">
-                </div>
-                <div class="form-group">
-                      <label for="exampleInputEmail1">Actividad</label>
-                      <select class="form-control" name="actividad" id="actividad">
-                          <option value="Acampar">Acampar</option>
-                          <option value="Ciclismo">Ciclismo</option>
-                          <option value="Senderismo">Senderismo</option>
-                          <option value="Otro">Otro</option>
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="">Numero de personas que visitan</label>
-                      <input class="form-control" value="1" type="number" id="numeroPersonas" min="1" name="numeroPersonas">
+                      <label for="">Resumen</label>
+                      <input class="form-control" placeholder="Resumen" type="text" v-model="newNews.resumen">
                   </div>
                 <div class="form-group">
-                      <label for="exampleInputEmail1">Vehiculo</label>
-                      <select class="form-control" name="usuario" id="usuario">
-                          <option value="Carro">Carro</option>
-                          <option value="Camioneta">Camioneta</option>
-                          <option value="Troca">Troca</option>
-                          <option value="Motocicleta">Motocicleta</option>
-                      </select>
-                      <label for="">
-                      <input type="checkbox" value="1"> Traila o Remolque</label>
+                      <label for="exampleInputEmail1">Cuerpo de la noticia</label>
+                      <textarea class="form-control" v-model="newNews.cuerpo"  cols="30" rows="5"></textarea>
                   </div>
-                
-              
-              
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Confirmar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
           </div>
           </form>
         </div>
       </div>
       <!-- Fin Modal -->
+      <!-- Modal Editar Noticia-->
+      <div
+        class="modal fade"
+        id="modalEditar"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modalEditar"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+           
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Editar Noticia </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body text-left">
+
+              
+                <div class="form-group row" style="padding:15px">
+                  <label for="" class="col-md-12">Titulo</label>
+                  <input  class="form-control col-md-6" v-model="updateNewsData.title" type="text">
+                </div>
+                <div class="form-group row" style="padding:15px">
+                  <label for="" class="col-md-12">Resumen</label>
+                  <input  class="form-control col-md-12" v-model="updateNewsData.extract"  type="text">
+                </div>
+                <div class="form-group row" style="padding:15px">
+                  <label for="" class="col-md-12">Contenido</label>
+                  <textarea  class="form-control col-md-12" rows="5" v-model="updateNewsData.body" ></textarea>
+                </div>
+                <div class="form-group" style="padding:15px">
+                  <select v-model="updateNewsData.status">
+                    <option value="Activa">Activa</option>
+                    <option value="Inactiva">Inactiva</option>
+                  </select>
+                </div>
+               
+                
+              
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" @click="updateNews(updateNewsData.id)">Confirmar</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- Fin Modal Editar Noticia-->
     </div>
   </div>
 </template>
@@ -179,10 +205,14 @@ export default {
   data() {
     return {
       moment: moment,
-      reservations: [],
-      areas: [],
-      users: [],
-      userSelect: "",
+      news: [],
+      newNews:[],
+      newsSelect: [],
+      updateNewsData:{
+        title:null,
+        extract:null,
+        body:null,
+      },
     };
   },
   filters: {
@@ -193,40 +223,24 @@ export default {
     },
   },
   mounted() {
-    this.getReservations();
-    this.getAreas();
-    this.getUsers();
+    this.getNews();
   },
   methods: {
-    async getReservations() {
-      this.reservations = [];
+    async getNews() {
+      this.news = [];
       try {
-        let response = await db
-          .collection("reservations")
-          .get()
-          .then((doc) => {
+        let response = await db.collection("news").get().then((doc) => {
             doc.forEach((res) => {
-              this.reservations.push(res.data());
-            });
-          });
-
-        if (this.userSelect != "") {
-          this.userSelect = this.users.find((doc) => {
-            return (this.userSelect.uid = doc.uid);
-          });
-
-          console.log(this.userSelect);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async getAreas() {
-      this.areas = [];
-      try {
-        let response = await db.collection("ubications").get().then((doc) => {
-            doc.forEach((res) => {
-              this.areas.push(res.data());
+                let newsData = {
+                  title:res.data().title,
+                  extract:res.data().extract,
+                  body:res.data().body,
+                  date: moment(res.data().date.toDate()).format('lll'),
+                  status:res.data().status,
+                  image:res.data().image,
+                  id:res.data().id,
+                  }
+              this.news.push(newsData);
             });
           });
 
@@ -234,19 +248,65 @@ export default {
         console.log(error);
       }
     },
-    async getUsers() {
-      this.users = [];
-      try {
-        let response = await db.collection("users").get().then((doc) => {
+    getNewsToEdit(id){
+      this.newsSelect= [];
+      db.collection('news').where('id', '==', id).get().then((doc)=> {
             doc.forEach((res) => {
-              this.users.push(res.data());
+              
+              this.newsSelect.push(res.data());
+              //console.log(this.userSelect[0].name);
+              this.updateNewsData.title=this.newsSelect[0].title;
+              this.updateNewsData.extract=this.newsSelect[0].extract;
+              this.updateNewsData.body=this.newsSelect[0].body;
+              this.updateNewsData.status=this.newsSelect[0].status;
+              this.updateNewsData.id=id;
+              $('#modalEditar').modal('show')
             });
           });
-
-      } catch (error) {
-        console.log(error);
-      }
     },
+    updateNews(id){
+      db.collection('news').doc(id).update({
+        title:this.updateNewsData.title,
+        extract:this.updateNewsData.extract,
+        body:this.updateNewsData.body,
+        status:this.updateNewsData.status
+      }).then( ()=> this.getNews(), this.$swal('Noticia Actualizado Con Exito!'), $('#modalEditar').modal('hide'))
+
+    },
+
+    async addNew(){
+
+      let response = db.collection("news").add({
+        title:this.newNews.titulo,
+        extract:this.newNews.resumen,
+        body:this.newNews.cuerpo,
+        image:'https://www.mexicodesconocido.com.mx/sites/default/files/nodes/inline/parque-nacional-cumbres-de-majalca-chihuahua-ng.jpg',
+        status:'Activa',
+        date:new Date(),
+      }).then(()=> {if(response){db.collection('news')
+                                    .doc(response.id)
+                                    .update({ id: response.id })}}, this.getNews(), this.$swal('Noticia Guardada con exito!'), $('#modalReservacion').modal('hide')) 
+    },
+    deleteNews(id){
+
+      this.$swal({
+  title: '¿Realmente quieres eliminar esta noticia?',
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: `Eliminar`,
+  denyButtonText: `Cancelar`,
+}).then((result) => {
+  /* Read more about isConfirmed, isDenied below */
+  if (result.isConfirmed) {
+     db.collection('news').doc(id).delete().then(()=> this.getNews(), this.$swal('Eliminada!', '', 'success'));
+    
+  } else if (result.isDenied) {
+    this.$swal('No se elimino la noticia', '', 'info')
+  }
+})
+     
+    }
+
   },
 };
 </script>
