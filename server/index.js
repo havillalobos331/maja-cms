@@ -9,9 +9,7 @@ exp.use(bodyParser.json())
 
 exp.post("/mail", async (req, res) => {
     try {
-
-
-       mailer.welcomeMail(req.body.email, req.body.name)
+       mailer.welcomeMail(req.body.email, req.body.data)
         res.status(200).json({
             msg: "Welcome Onboard",
         })

@@ -3,7 +3,7 @@
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
-      <button @click="submit()"></button>
+      <button @click="submit()">correo</button>
     </div>
     <router-view/>
   </div>
@@ -43,15 +43,29 @@ export default {
         user:{
             email: '',
             password: '',
+        },
+        request:{
+          email: 'havillalobos331@gmail.com',
+          data: {buyDate: '2 agosto',
+            price: '5 pesos',
+            name: 'Horacio Adame',
+            date: '11 septiembre',
+            area: '3',
+            old: '0',
+            adult: '1',
+            child: '0',
+            vehicleName: 'ford escape 2006',
+            vehiclePlate: '12345',
+            activity: 'acampar'}
         }
     }
   },
   methods:{
       async submit(){
 
-            try {
 
-                let response = await axios.post('http://localhost:4000/mail', this.user);
+            try {
+                let response = await axios.post('http://localhost:4000/mail', this.request);
                 console.log(response)
                 alert("Registration Was successful");
                 this.loader = false;

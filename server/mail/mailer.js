@@ -26,12 +26,22 @@ const handlebarOptions = {
 };
 transporter.use('compile', hbs(handlebarOptions));
 
-exports.welcomeMail = (email, name) => transporter.sendMail({
+exports.welcomeMail = (email, data) => transporter.sendMail({
     from: 'Vue Mailer',
-    to: 'havillalobos331@gmail.com',
+    to: email,
     subject: "Account Creation",
-    template: "welcome",
+    template: "example",
     context: {
-        user: 'hola'
+        buy_date: data.buyDate,
+        price: data.price,
+        name: data.name,
+        date: data.date,
+        area: data.area,
+        old: data.old,
+        adult: data.adult,
+        child: data.child,
+        vehicle_name: data.vehicleName,
+        vehicle_plate: data.vehiclePlate,
+        activity: data.activity
     }
 });
