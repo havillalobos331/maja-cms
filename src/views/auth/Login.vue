@@ -107,7 +107,7 @@ async getUser(uid){
       .auth()
       .signInWithEmailAndPassword(this.user.email, this.user.password)
       .then(data => {
-        this.$router.replace({ name: "Reservations" });
+        window.location.href = "http://majalca.herokuapp.com/#/dashboard";
       })
       .catch(err => {
           alert('usuario o contraseña incorrecto')
