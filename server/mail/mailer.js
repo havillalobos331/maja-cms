@@ -32,6 +32,7 @@ exports.welcomeMail = (email, data) => transporter.sendMail({
     subject: "Account Creation",
     template: "example",
     context: {
+        img: "https://media.discordapp.net/attachments/697564908694274118/756683479118250095/image0.jpg",
         buy_date: data.buyDate,
         price: data.price,
         name: data.name,

@@ -36,6 +36,9 @@
 <script>
 
 import axios from 'axios';
+var QRCode = require('qrcode');
+
+
 
 export default {
   data(){
@@ -65,6 +68,9 @@ export default {
 
 
             try {
+                QRCode.toString('I am a pony!',{type:'terminal'}, function (err, url) {
+                  console.log(url)
+                })
                 let response = await axios.post('http://localhost:4000/mail', this.request);
                 console.log(response)
                 alert("Registration Was successful");
