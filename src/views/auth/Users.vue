@@ -61,20 +61,20 @@
       <div class="table-container">
         <div class="row">
           <div class="col-md-2">
-          <a href="users"><button class="btn btn-info"
+          <a href="#/users"><button class="btn btn-info"
               style="background: #558A16;" disabled>Usuarios Aplicación</button></a>
               </div>
               <div class="col-md-2">
-          <a href="usersSec"><button class="btn btn-info"
+          <a href="#/usersSec"><button class="btn btn-info"
               style="background: #558A16;" >Usuarios Guardia</button></a>
               </div>
             <div class="col-md-2">
-          <a href="usersAdmin"><button class="btn btn-info"
+          <a href="#/usersAdmin"><button class="btn btn-info"
               style="background: #558A16;">Usuarios Administrador</button></a>
               </div>
         </div>
         <div class="row" style="padding:15px">
-          <div class="col-md-9 text-left">
+          <div class="col-md-6 text-left">
             <h3>Usuarios Aplicación</h3>
           </div>
           <div class="col-md-3">
@@ -83,7 +83,15 @@
               style="background: #558A16;"
               data-toggle="modal"
               data-target="#modalReservacion"
-            >Registrar Usuario App</button>
+            >Registrar Usuario Persona</button>
+          </div>
+          <div class="col-md-3">
+            <button
+              class="btn btn-info"
+              style="background: #558A16;"
+              data-toggle="modal"
+              data-target="#modalReservacion2"
+            >Registrar Usuario Organización</button>
           </div>
         </div>
         <table class="table-style table table-striped" style="width:70vw; text-align:left">
@@ -92,15 +100,17 @@
               <th>Usuario</th>
               <th>Correo</th>
               <th>Tipo Usuario</th>
+              <th>Estado</th>
               <th>Registro Completo</th>
               <th>Opciones</th>
             </tr>
           </thead>
           <tbody>
             <tr  v-for="user in users" :key="user.uid" >
-            <td>{{user.name}}</td>
+            <td>{{user.name}} {{user.firstName}} {{user.lastName}}</td>
             <td>{{user.email}}</td>
             <td>{{user.role}}</td>
+            <td>{{user.status}}</td>
             <td><span v-if="user.completeProfile">Completo</span><span v-else>Pendiente</span></td>
             <td><div style="width:100px;"><button style="font-size:13px" class="btn btn-info" @click="getUserToEdit(user.uid)"><i class="fa fa-edit"></i></button>
             <button style="font-size:13px; margin-left:10px" class="btn btn-danger" @click="deleteUser(user.uid)"><i class="fa fa-trash"></i></button></div></td>
@@ -109,7 +119,7 @@
         </table>
       </div>
 
-      <!-- Modal -->
+      <!-- Modal Persona Fisica-->
       <div
         class="modal fade"
         id="modalReservacion"
@@ -129,27 +139,153 @@
             </div>
             <div class="modal-body text-left">
 
-              
+              <label style="font-weight:bold">Datos Personales</label>
                 <div class="form-group row" style="padding:15px">
-                  <label for="" class="col-md-12">Nombre Usuario</label>
-                  <input  class="form-control col-md-6" v-model="newUser.name" name="name" type="text">
+                <label class="col-md-6">Nombre</label>
+                <label class="col-md-6">Apellido Paterno</label>
+                  <input  class="form-control col-md-6" required placeholder="Nombre" v-model="newUser.name" name="name" type="text">
+                  <input  class="form-control col-md-6" required placeholder="Apellido Paterno" v-model="newUser.firstName" type="text">
+                  <div class="col-md-12" style="height:10px"></div>
+                  <label class="col-md-6">Apellido Materno</label>
+                <label class="col-md-6">Fecha de Nacimiento</label>
+                <input  class="form-control col-md-6" required placeholder="Apellido Materno" v-model="newUser.lastName" type="text">
+                <input  class="form-control col-md-6" required placeholder="Fecha Nacimiento" v-model="newUser.birthdate" type="date">
+                <div class="col-md-12" style="height:10px"></div>
+                <label class="col-md-6">Dirección</label>
+                <label class="col-md-6">Teléfono</label>
+                <input  class="form-control col-md-6" placeholder="Dirección" required v-model="newUser.direction" type="text">
+                <input  class="form-control col-md-6" placeholder="Teléfono" required v-model="newUser.telephone" type="number">
+                <div class="col-md-12" style="height:10px"></div>
+                <label class="col-md-6">¿De donde nos visitan?</label>
+                <label class="col-md-6">Motivo de visita</label>
+                <select class="form-control col-md-6" required v-model="newUser.origin">
+                <option value="Chihuahua">Chihuahua</option>
+                <option value="Aldama">Aldama</option>
+                <option value="Cuahutemoc">Cuahutemoc</option>
+                <option value="Juarez">Juarez</option>
+                <option value="Delicias">Delicias</option>
+                <option value="Otro">Otro</option>
+                </select>
+                <select class="form-control col-md-6" required v-model="newUser.reason">
+                <option value="Acampar">Acampar</option>
+                <option value="Senderismo">Senderismo</option>
+                <option value="Día de campo">Día de campo</option>
+                <option value="Otro">Otro</option>
+                </select>
+                <div class="col-md-12" style="height:20px"></div>
+                <input  class="form-control col-md-12" placeholder="Numero de INE" v-model="newUser.INE" type="number">
+                
                 </div>
+                <div class="form-group">
+                      <label for="exampleInputEmail1">Foto de Noticia</label>
+                      <input class="form-control" type="file" @change="previewImage" accept="image/*">
+                      <p>Progress: {{uploadValue.toFixed()+"%"}}
+                      <progress id="progress" :value="uploadValue" max="100" ></progress>  </p>
+                  </div>
+                  <div v-if="imageData!=null">
+        <img class="preview" style="width:120px" :src="picture">
+        <br>
+      <button style="display:none" @click="onUpload">Upload</button>
+    </div>
                 <div class="form-group row" style="padding:15px">
-                  <label for="" class="col-md-12">Email</label>
-                  <input  class="form-control col-md-12" v-model="newUser.email" name="email" type="email">
+                  <label for="" class="col-md-6">Correo Electronico</label>
+                  <label for="" class="col-md-6">Contraseña</label>
+                  <input  class="form-control col-md-12" style="margin-bottom:5px;" required v-model="newUser.email" name="email" type="email">
+                  <input  class="form-control col-md-6" required minlength="5" placeholder="Contraseña"  maxlength="40" required pattern="[A-Za-z0-9]+" v-model="newUser.password" name="password" type="password">
+                  <input  class="form-control col-md-6" required minlength="5" placeholder="Confirmar Contraseña" maxlength="40" required pattern="[A-Za-z0-9]+" v-model="newUser.passwordConfirm" name="password" type="password">
+                  <p style="color:orange" v-if="newUser.passwordConfirm != newUser.password">Las contraseñas no coinciden</p>
+                  <p style="color:green" v-if="newUser.passwordConfirm == newUser.password">Las contraseñas coinciden</p>
                 </div>
-                <div class="form-group row" style="padding:15px">
-                  <label for="" class="col-md-12">Password</label>
-                  <input  class="form-control col-md-12" v-model="newUser.password" name="password" type="password">
-                </div>
+                <label>¿Primera visita? <input type="checkBox"> </label>
+               
+                
                
                 
               
               
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-              <button type="submit" class="btn btn-primary">Confirmar</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-info">Crear Usuario</button>
+            </div>
+          </div>
+          </form>
+        </div>
+      </div>
+      <!-- Fin Modal -->
+
+      <!-- Modal Persona Moral-->
+      <div
+        class="modal fade"
+        id="modalReservacion2"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modalReservacion2"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+            <form @submit.prevent="addUser">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Nuevo Usuario</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body text-left">
+
+              <label style="font-weight:bold">Datos Personales</label>
+                <div class="form-group row" style="padding:15px">
+                <label class="col-md-6">Tipo Organizacion</label>
+                <label class="col-md-6">Nombre Organizacion</label>
+                  <input  class="form-control col-md-6" placeholder="Privada, Esc. Primaria, Esc. Secundaria..." required v-model="newUser.name" type="text">
+                  <input  class="form-control col-md-6" placeholder="Nombre Organizacion" required v-model="newUser.firstName" type="text">
+                  <div class="col-md-12" style="height:10px"></div>
+                  <label class="col-md-6">RFC</label>
+                <label class="col-md-6">Fecha de Registro</label>
+                <input  class="form-control col-md-6" placeholder="RFC" required v-model="newUser.lastName" type="text">
+                <input  class="form-control col-md-6" placeholder="Fecha de Registro" required v-model="newUser.birthdate" type="date">
+                <div class="col-md-12" style="height:10px"></div>
+                <label class="col-md-6">Dirección</label>
+                <label class="col-md-6">Teléfono</label>
+                <input  class="form-control col-md-6" placeholder="Dirección" required v-model="newUser.direction" type="text">
+                <input  class="form-control col-md-6" placeholder="Teléfono" required v-model="newUser.telephone" type="number">
+                <div class="col-md-12" style="height:10px"></div>
+                <label class="col-md-6">¿De donde nos visitan?</label>
+                <label class="col-md-6">Motivo de visita</label>
+                <select class="form-control col-md-6" required v-model="newUser.origin">
+                <option value="Chihuahua">Chihuahua</option>
+                <option value="Aldama">Aldama</option>
+                <option value="Cuahutemoc">Cuahutemoc</option>
+                <option value="Juarez">Juarez</option>
+                <option value="Delicias">Delicias</option>
+                <option value="Otro">Otro</option>
+                </select>
+                <select class="form-control col-md-6" required v-model="newUser.reason">
+                <option value="Acampar">Acampar</option>
+                <option value="Senderismo">Senderismo</option>
+                <option value="Día de campo">Día de campo</option>
+                <option value="Otro">Otro</option>
+                </select>
+                <div class="col-md-12" style="height:20px"></div>
+                <input  class="form-control col-md-12" required placeholder="Numero de INE" v-model="newUser.INE" type="number">
+                </div>
+                <div class="form-group row" style="padding:15px">
+                  <label for="" class="col-md-6">Correo Electronico</label>
+                  <label for="" class="col-md-6">Contraseña</label>
+                  <input  class="form-control col-md-6" required v-model="newUser.email" name="email" type="email">
+                  <input  class="form-control col-md-6" required v-model="newUser.password" name="password" type="password">
+                </div>
+               
+                
+               
+                
+              
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-info">Crear Usuario</button>
             </div>
           </div>
           </form>
@@ -177,14 +313,25 @@
             </div>
             <div class="modal-body text-left">
 
-              
+              <label class="col-md-12" style="padding-top:15px">Foto INE
+                </label>
+                 <img style="width:150px ;" v-bind:src="updateUserData.fotoINE">
                 <div class="form-group row" style="padding:15px">
-                  <label for="" class="col-md-12">Nombre Usuario</label>
+                  <label for="" class="col-md-12">Nombre de Usuario</label>
                   <input  class="form-control col-md-6" v-model="updateUserData.name" name="name" type="text">
+                
                 </div>
+                
+                
                 <div class="form-group row" style="padding:15px">
                   <label for="" class="col-md-12">Email</label>
                   <input  class="form-control col-md-12" v-model="updateUserData.email" name="email" type="email">
+                </div>
+                <div class="form-group">
+                  <select v-model="updateUserData.status" class="form-control">
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                  </select>
                 </div>
                
                 
@@ -220,7 +367,11 @@ export default {
         name:null,
         email:null,
         uid:null,
+        status:null,
       },
+      imageData:null,
+      picture:null,
+      uploadValue: 0,
       newUser:[],
       userID:'',
     };
@@ -259,13 +410,45 @@ export default {
               this.updateUserData.name=this.userSelect[0].name;
               this.updateUserData.email=this.userSelect[0].email;
               this.updateUserData.uid=id;
+              this.updateUserData.fotoINE=this.userSelect[0].fotoINE;
               $('#modalEditar').modal('show')
             });
           });
     },
-    async addUser(){
-        try {
-                let response = await firebase.auth().createUserWithEmailAndPassword(this.newUser.email, this.newUser.password)
+     previewImage(event) {
+      this.uploadValue=0;
+      this.picture=null;
+      this.imageData = event.target.files[0];
+    },
+    onUpload(){
+      this.picture=null;
+      const storageRef=firebase.storage().ref('this.imageData.name').put(this.imageData);
+      storageRef.on('state_changed',snapshot=>{
+        this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+      }, error=>{console.log(error.message)},
+      ()=>{this.uploadValue=100;
+        storageRef.snapshot.ref.getDownloadURL().then((url)=>{
+          this.picture =url;
+        });
+      }
+      );
+    },
+     addUser(){
+
+      this.picture=null;
+      const storageRef= firebase.storage().ref('this.imageData.name').put(this.imageData);
+      storageRef.on('state_changed',snapshot=>{
+        this.uploadValue = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+      }, error=>{console.log(error.message)},
+      ()=>{this.uploadValue=100;
+        storageRef.snapshot.ref.getDownloadURL().then((url)=>{
+          this.picture = url;
+          //Este alert arroja el url de la imagen
+
+         // alert(this.picture);
+
+          try {
+                let response =  firebase.auth().createUserWithEmailAndPassword(this.newUser.email, this.newUser.password)
                 if(response){
                     
                     let user = {
@@ -273,18 +456,33 @@ export default {
                             name: this.newUser.name,
                             email: this.newUser.email,
                         }
-                    if(response.additionalUserInfo.isNewUser){
+                   
+
+
+
+                    
           
                        db.collection("users").add({
         name:this.newUser.name,
         email:this.newUser.email,
+        status:'Activo',
         completeProfile:false,
+        firstName:this.newUser.firstName,
+        lastName:this.newUser.lastName,
+        birthdate:this.newUser.birthdate,
+        INE:this.newUser.INE,
+        fotoINE:this.picture,
+        firstTime:true,
+        reason:this.newUser.reason,
+        origin:this.newUser.origin,
+        telephone:this.newUser.telephone,
+        registerDate:new Date(),
         uid:Math.random().toString(36).substring(7),
         role:'Usuario',
         terms:false,
       }).then( ()=> this.getUsers(), this.$swal('Registro Exitoso!'), $('#modalReservacion').modal('hide'))
                     
-                    }
+                    
                     
                 }
             } catch(e) {
@@ -295,6 +493,14 @@ export default {
                 }
                 console.log(e);
             }
+  
+     
+          
+        });
+      }
+      );
+
+        
 
 
 
@@ -311,6 +517,7 @@ export default {
       db.collection('users').doc(id).update({
         name:this.updateUserData.name,
         email:this.updateUserData.email,
+        status:this.updateUserData.status,
       }).then( ()=> this.getUsers(), this.$swal('Usuario Actualizado Con Exito!'), $('#modalEditar').modal('hide'))
 
     },

@@ -86,7 +86,7 @@
           <tbody>
             <tr v-for="noticia in news" :key="noticia.id"> 
               <td><img style="width:80px ;" v-bind:src="noticia.image"></td>
-              <td>{{noticia.title}}</td>
+              <td>{{noticia.title}}<br><span style="font-size:10px; font-style:italic">Autor: {{noticia.autor}}</span></td>
               <td>{{noticia.extract}}</td>
               <td>{{noticia.date}}</td>
               <td>{{noticia.status}}</td>
@@ -128,6 +128,10 @@
                 <div class="form-group">
                       <label for="exampleInputEmail1">Cuerpo de la noticia</label>
                       <textarea class="form-control" v-model="newNews.cuerpo"  cols="30" rows="5"></textarea>
+                  </div>
+                  <div class="form-group">
+                      <label for="">Autor</label>
+                      <input class="form-control" placeholder="Nombre del Autor" type="text" v-model="newNews.autor">
                   </div>
                 <div class="form-group">
                       <label for="exampleInputEmail1">Foto de Noticia</label>
@@ -174,18 +178,22 @@
               
                 <div class="form-group row" style="padding:15px">
                   <label for="" class="col-md-12">Titulo</label>
-                  <input  class="form-control col-md-6" v-model="updateNewsData.title" type="text">
+                  <input  class="form-control col-md-12" v-model="updateNewsData.title" type="text">
                 </div>
                 <div class="form-group row" style="padding:15px">
                   <label for="" class="col-md-12">Resumen</label>
                   <input  class="form-control col-md-12" v-model="updateNewsData.extract"  type="text">
                 </div>
                 <div class="form-group row" style="padding:15px">
+                  <label for="" class="col-md-12">Autor</label>
+                  <input  class="form-control col-md-12" v-model="updateNewsData.autor"  type="text">
+                </div>
+                <div class="form-group row" style="padding:15px">
                   <label for="" class="col-md-12">Contenido</label>
                   <textarea  class="form-control col-md-12" rows="5" v-model="updateNewsData.body" ></textarea>
                 </div>
                 <div class="form-group" style="padding:15px">
-                  <select v-model="updateNewsData.status">
+                  <select class="form-control" v-model="updateNewsData.status">
                     <option value="Activa">Activa</option>
                     <option value="Inactiva">Inactiva</option>
                   </select>
@@ -253,6 +261,7 @@ export default {
                   date: moment(res.data().date.toDate()).format('lll'),
                   status:res.data().status,
                   image:res.data().image,
+                  autor:res.data().autor,
                   id:res.data().id,
                   }
               this.news.push(newsData);
@@ -291,6 +300,7 @@ export default {
               this.updateNewsData.title=this.newsSelect[0].title;
               this.updateNewsData.extract=this.newsSelect[0].extract;
               this.updateNewsData.body=this.newsSelect[0].body;
+              this.updateNewsData.autor=this.newsSelect[0].autor;
               this.updateNewsData.status=this.newsSelect[0].status;
               this.updateNewsData.id=id;
               $('#modalEditar').modal('show')
@@ -326,6 +336,7 @@ export default {
         extract:this.newNews.resumen,
         body:this.newNews.cuerpo,
         image:this.picture,
+        autor:this.newNews.autor,
         status:'Activa',
         date:new Date(),
       }).then(()=> /*{if(response){db.collection('news')

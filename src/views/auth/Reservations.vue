@@ -128,6 +128,8 @@ text-decoration: none;
         <div class="row" style="padding:15px">
           <div class="col-md-9 text-left">
             <h3>Reservaciones</h3>
+            <button class="btn btn-info">Reservaciones Activas</button>
+            <button class="btn btn-info" style="margin-left:10px" disabled>Historial de Reservaciones</button>
           </div>
           <div class="col-md-3">
             <button
@@ -154,7 +156,7 @@ text-decoration: none;
               <td>{{reservation.areaName}}</td>
               <td>{{reservation.fecha}}</td>
               <td><span v-if="reservation.estado">PAGADO</span><span v-else>Pendiente Pago</span></td>
-              <td class="text-center"><div style="width:80px;"><button style="font-size:13px" class="btn btn-info"><i class="fa fa-eye"></i>Ver</button></div></td>
+              <td class="text-center"><div  style="width:80px;"><button @click="getReservation(reservation.id)" style="font-size:13px" class="btn btn-info"><i class="fa fa-eye" ></i>Ver</button></div></td>
             </tr>
 
           </tbody>
@@ -191,7 +193,7 @@ text-decoration: none;
                   <div class="form-group">
                       <label for="exampleInputEmail1">Selecciona un Usuario</label>
                       <select class="form-control" v-model="newReservation.user" name="usuario" id="usuario">
-                          <option v-for="user in users" :key="user.id" :value="user.id">{{user.name}} - {{user.email}}</option>
+                          <option v-for="user in users" :key="user.id" :value="user.uid">{{user.name}} - {{user.email}}</option>
                       </select>
                   </div>
                 <div class="form-group row" style="padding:15px">
@@ -217,17 +219,22 @@ text-decoration: none;
                       <label for="">Numero de personas que visitan</label>
                       <input v-model="newReservation.persons" class="form-control" value="1" type="number" id="numeroPersonas" min="1" name="numeroPersonas">
                   </div>
-                <div class="form-group">
-                      <label for="exampleInputEmail1">Vehiculo</label>
-                      <select v-model="newReservation.user" class="form-control" name="usuario" id="usuario">
-                          <option value="Carro">Carro</option>
-                          <option value="Camioneta">Camioneta</option>
-                          <option value="Troca">Troca</option>
-                          <option value="Motocicleta">Motocicleta</option>
-                      </select>
-                      <label for="">
-                      <input v-model="newReservation.trailer" type="checkbox" value="1"> Traila o Remolque</label>
+                  <div class="form-grup">
+                  <label for="exampleInputEmail1">Vehiculos</label>
+                  <input v-model="nuevoAuto"> <div @click="AgregarAuto()" class="btn btn-info" style="font-size:20px; padding:0px 10px">+</div>
+                  <ul>
+                  <li v-for="auto in autos" :key="auto.id">{{auto}}</li>
+                  </ul>
                   </div>
+
+                  <div class="form-grup">
+                  <label for="exampleInputEmail1">Personas</label>
+                  <input v-model="nuevaPersona"> <div @click="AgregarPersona()" class="btn btn-info" style="font-size:20px; padding:0px 10px">+</div>
+                  <ul>
+                  <li v-for="persona in personas" :key="persona.id">{{persona}}</li>
+                  </ul>
+                  </div>
+                  
                 
               
               
@@ -241,12 +248,101 @@ text-decoration: none;
         </div>
       </div>
       <!-- Fin Modal -->
+
+       <!-- modal ficha tecnica -->
+
+      <div
+        class="modal fade"
+        id="modalFicha"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modalFicha"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+         
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Ficha de reservacion</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body text-left">
+
+            <table class="table">
+            <tr>
+            <td><span style="font-weight:bold">Visitante: </span></td>
+            <td><span style="font-style:italic; font-size:13px">{{reservationInfo.cliente}}</span></td>
+            </tr>
+            <tr>
+            <td><span style="font-weight:bold">Area: </span></td>
+            <td><span style="font-style:italic; font-size:13px">{{reservationInfo.area}}</span></td>
+            </tr>
+            <tr>
+            <td><span style="font-weight:bold">Id Reservación: </span></td>
+            <td><span style="font-style:italic; font-size:13px">{{reservationInfo.id}}</span></td>
+            </tr>
+            <tr>
+            <td><span style="font-weight:bold">Desde: </span></td>
+            <td>{{reservationInfo.dateOne}}</td>
+            </tr>
+            <tr>
+            <td><span style="font-weight:bold">Hasta: </span></td>
+            <td>{{reservationInfo.dateTwo}}</td>
+            </tr>
+            <tr>
+            <td><span style="font-weight:bold">Ficha Creada: </span></td>
+            <td>{{reservationInfo.date}}</td>
+            </tr>
+            <tr>
+            <td><span style="font-weight:bold">Estado: </span></td>
+            <td><p v-if="reservationInfo.payment" style="background:green; border-radius:5px; color:white; text-align:center">PAGADO</p>
+            <p v-else style="background:orange; border-radius:5px; color:white; text-align:center">PENDIENTE DE PAGO</p></td>
+            </tr>
+            <tr>
+            <td><span style="font-weight:bold">Personas: </span></td>
+            <td><ul>
+                  <li v-for="personas in reservationInfo.personas" :key="personas.id">{{personas}}</li>
+                  </ul></td>
+            </tr>
+            <tr>
+            <td><span style="font-weight:bold">Vehiculos: </span></td>
+            <td>
+            <ul>
+                  <li v-for="vehiculo in reservationInfo.vehiculos" :key="vehiculo.id">{{vehiculo}}</li>
+                  </ul>
+            </td>
+            </tr>
+            <tr>
+            <td colspan="2" class="text-center"><img style="width:200px" src="https://adpro3d-os.com/frame.png"></td>
+            </tr>
+            </table>
+           
+            
+            
+              
+                
+                
+              
+              
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-danger" @click="cancelarReserva(reservationInfo.id)">Cancelar Reservacion</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+       
+        </div>
+      </div>
+      <!-- Fin Modal -->
     </div>
   </div>
 </template>
 <script>
 import firebase from "firebase";
 import { db } from "@/main";
+
 var moment = require("moment");
 moment.locale("es");
 
@@ -259,10 +355,24 @@ export default {
       users: [],
       userSelect: "",
       newReservation:[],
+      reservationSelect:[],
+      nuevoAuto:null,
+      nuevaPersona:null,
+      autos:[],
+      personas:[],
       nameUser:'',
+      reservationInfo:{
+        id:null,
+        dateOne:null,
+        date:null,
+        dateTwo:null,
+        payment:null,
+        process:null,
+      },
 
     };
   },
+  
   filters: {
     formatDate(date) {
       moment.locale("es");
@@ -276,11 +386,13 @@ export default {
     this.getUsers();
   },
   methods: {
-    getUserName(id){
-      return "Gerardo Lucero";
+    AgregarAuto(){
+      this.autos.push(this.nuevoAuto);
+      this.nuevoAuto='';
     },
-    getAreaName(id){
-      return "Area 1";
+    AgregarPersona(){
+      this.personas.push(this.nuevaPersona);
+      this.nuevaPersona='';
     },
     async getReservations() {
       this.reservations = [];
@@ -301,6 +413,7 @@ export default {
               let objt = {
                 userName:res1.data().name,
                 areaName:res2.data().name,
+                id:res.data().id,
                 fecha:moment(res.data().dateOne.toDate()).format('lll')+' - '+moment(res.data().dateTwo.toDate()).format('lll'),
                 estado:res.data().payment,
               }
@@ -321,7 +434,7 @@ export default {
     async getAreas() {
       this.areas = [];
       try {
-        let response = await db.collection("ubications").get().then((doc) => {
+        let response = await db.collection("ubications").where("status", "==", true).get().then((doc) => {
             doc.forEach((res) => {
               this.areas.push(res.data());
             });
@@ -345,9 +458,12 @@ export default {
       }
     },
     async addReservation(){
-      let response = db.collection("reservation").add({
+      let response = db.collection("reservations").add({
+
+        
         dateOne:this.newReservation.dateOne,
         dateTwo:this.newReservation.dateTwo,
+        date:new Date(),
         payment:false,
         process:'EN CURSO',
         status:false,
@@ -355,8 +471,75 @@ export default {
         activity:this.newReservation.activity,
         ubication:this.newReservation.ubication,
         user:this.newReservation.user,
+        cars:this.autos,
+        persons:this.personas,
       }).then( ()=> this.getReservations(), this.$swal('Registro Exitoso!'), $('#modalReservacion').modal('hide')) 
     },
+   async getReservation(id){
+     
+      this.reservationSelect= [];
+      let response = await db.collection('reservations').where('id', '==', id).get().then((doc)=> {
+            doc.forEach((res) => {  
+
+              var userNameG = db.collection("users").where("uid", "==", res.data().user).get().then((doc1) => {
+            doc1.forEach((res1) => {
+
+              var areaNameG = db.collection("ubications").where("id", "==", res.data().ubication).get().then((doc2) => {
+            doc2.forEach((res2) => {
+             
+              
+               // userName:res1.data().name,
+               // areaName:res2.data().name,
+
+              this.reservationSelect.push(res.data());
+              
+              this.reservationInfo.date=moment(this.reservationSelect[0].date.toDate()).format('lll');
+              this.reservationInfo.dateOne=moment(this.reservationSelect[0].dateOne.toDate()).format('lll');
+              this.reservationInfo.dateTwo=moment(this.reservationSelect[0].dateTwo.toDate()).format('lll');
+              this.reservationInfo.id=this.reservationSelect[0].id;
+              this.reservationInfo.cliente=res1.data().name;
+              this.reservationInfo.personas=this.reservationSelect[0].persons;
+              this.reservationInfo.vehiculos=this.reservationSelect[0].cars;
+              this.reservationInfo.area=res2.data().name;
+              this.reservationInfo.payment=this.reservationSelect[0].payment;
+              this.reservationInfo.process=this.reservationSelect[0].process;
+                
+              console.log(objt);
+              this.reservations.push(objt);
+                  });
+                });
+              });
+            });  
+
+
+             
+              //console.log(this.userSelect[0].name);
+              
+              
+            });
+          });
+         $('#modalFicha').modal('show') 
+
+    },
+    cancelarReserva(id){
+
+      this.$swal({
+  title: '¿Realmente quieres cancelar esta reservacion?',
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: `Cancelar Reservacion`,
+  denyButtonText: `Regresar`,
+}).then((result) => {
+  /* Read more about isConfirmed, isDenied below */
+  if (result.isConfirmed) {
+     db.collection('reservations').doc(id).delete().then(()=> this.getReservations(), this.$swal('Eliminado!', '', 'success'));
+    
+  } else if (result.isDenied) {
+    this.$swal('No se cancelo la rservacion', '', 'info')
+  }
+})
+     
+    }
   },
 };
 </script>

@@ -7,6 +7,8 @@ import 'firebase/auth';
 import { VuejsDatatableFactory } from 'vuejs-datatable';
 import * as VueGoogleMaps from "vue2-google-maps";
 import VueSweetalert2 from 'vue-sweetalert2';
+import Vuelidate from 'vuelidate'
+Vue.use(Vuelidate)
  
 // If you don't need the styles, do not connect
 import 'sweetalert2/dist/sweetalert2.min.css';

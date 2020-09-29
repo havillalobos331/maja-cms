@@ -1,4 +1,7 @@
 <style>
+::-webkit-scrollbar {
+    display: none;
+}
 button{
   background-color: #707070;
   color: white;
@@ -117,7 +120,7 @@ p{
         <table class="table table-striped" style="width:90%; text-align:left; margin-left:5%; font-size:14px">
           <tr>
             <td>Mayores de 18:</td>
-            <td>0</td>
+            <td>4</td>
           </tr>
           <tr>
             <td>Menores de 18:</td>
@@ -142,15 +145,31 @@ p{
       </div>
 
       <div class="dashboard-object">
+       <div class="dashboard-object-content" style="background:url('img/bg-element-dashboard.png'); background-size: 100% auto; background-position:bottom; padding-bottom:35px; background-repeat:no-repeat">
         <div style="display: flex;">
-          <p class="dashboard-title">Ocupacion por: </p>
-          <p class="dashboard-title">Dia</p>
-          <p class="dashboard-title">Semana</p>
-          <p class="dashboard-title">Mes</p>
+          <p class="dashboard-title">Ocupacion por Fecha: </p>
+          
         </div>
-        <img alt="Vue logo" src="" style="width:100%;">
+      <div class="form-group">
+      <button v-if="selectTipoFecha>0" @click="restaurarTipoFecha()" class="btn btn-info" style="font-size:10px; padding:3px">Volver</button>
+      <div style="with:100%"></div>
+      <label v-if="selectTipoFecha<1">Selecciona tipo de Consulta</label>
+          <select class="form-control" v-if="selectTipoFecha<1" v-model="selectTipoFecha">
+          <option value="1">Rango de fechas</option>
+          <option value="2">Semana</option>
+          <option value="3">Mes</option>
+          </select>
+          <label v-if="selectTipoFecha==1">Desde</label>
+          <input v-if="selectTipoFecha==1" class="form-control" type="date">
+          <label v-if="selectTipoFecha==1">Hasta</label>
+          <input v-if="selectTipoFecha==1" @change="txt1()" class="form-control" type="date">
+          <label v-if="selectTipoFecha==2">Selecciona la semana</label>
+          <input v-if="selectTipoFecha==2" @change="txt1()" class="form-control" type="week">
+          <label v-if="selectTipoFecha==3">Selecciona el mes</label>
+          <input v-if="selectTipoFecha==3" @change="txt1()" class="form-control" type="month">
+          </div>
       </div>
-
+</div>
     </div>
 
     <div class="dashboard-row">
@@ -162,15 +181,15 @@ p{
         <table class="table table-striped" style="width:90%; text-align:left; margin-left:5%; font-size:14px">
           <tr>
             <td>Acampar:</td>
-            <td>0</td>
+            <td>3</td>
           </tr>
           <tr>
             <td>Ciclismo</td>
-            <td>0</td>
+            <td>2</td>
           </tr>
           <tr>
             <td>Senderismo</td>
-            <td>0</td>
+            <td>2</td>
           </tr>
           <tr>
             <td>Otro</td>
@@ -228,28 +247,30 @@ p{
       </div>
 
       <div class="dashboard-object">
-        <p class="dashboard-title">Reportes de Guardias</p>
-        <div class="dashboard-row">
-          <p>reporte</p> <button style="float:right;">Detalles</button>
+      <div class="dashboard-object-content" style="background:url('img/bg-element-dashboard.png'); background-size: 100% auto; background-position:bottom; padding-bottom:35px; background-repeat:no-repeat">
+        <p class="dashboard-title">Reporte de Guardias<br><span style="font-style:italic; font-size:10px">(Ultimo Escaneo)</span></p>
+        <div style="height: 150px; overflow: scroll;">
+        <table class="table table-striped" style="width:90%; text-align:left; margin-left:5%; font-size:14px">
+          <tr v-for="area in areas" :key="area.id">
+            <td>{{area.name}}</td>
+            <td>10:15am</td>
+          </tr>
+        </table>
         </div>
-        <div class="dashboard-row">
-          <p>reporte</p> <button style="float:right;">Detalles</button>
-        </div>
-        <div class="dashboard-row">
-          <p>reporte</p> <button style="float:right;">Detalles</button>
-        </div>
-        <div class="dashboard-row">
-          <p>reporte</p> <button style="float:right;">Detalles</button>
         </div>
       </div>
 
       <div class="dashboard-object">
         <p class="dashboard-title">Reseñas de Usuarios</p>
         <div class="dashboard-row">
-          <p>reseña</p> <button style="float:right;">Detalles</button>
+          <span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star"></span>
+<span class="fa fa-star"></span>
         </div>
         <div class="dashboard-row">
-          <p>reseña</p> <button style="float:right;">Detalles</button>
+          <p style="font-style:italic">Datos Insuficientes para calcular promedio</p>
         </div>
       </div>
 
@@ -278,6 +299,7 @@ export default {
       areas: [],
       users: [],
       userSelect: "",
+      selectTipoFecha:0,
     };
   },
   filters: {
@@ -329,6 +351,10 @@ export default {
         console.log(error);
       }
     },
+    txt1(){
+      alert ('No hay datos para mostrar');
+      this.selectTipoFecha=0;
+    },
     async getUsers() {
       this.users = [];
       try {
@@ -342,6 +368,9 @@ export default {
         console.log(error);
       }
     },
+   restaurarTipoFecha(){
+     this.selectTipoFecha=0;
+   }
   },
 };
 </script>

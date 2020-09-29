@@ -61,12 +61,12 @@
       <div class="table-container">
         <div class="row">
           <div class="col-md-2">
-            <a href="users">
+            <a href="#/users">
           <button class="btn btn-info"
               style="background: #558A16;">Usuarios Aplicación</button></a>
               </div>
               <div class="col-md-2">
-          <a href="usersSec"><button class="btn btn-info"
+          <a href="#/usersSec"><button class="btn btn-info"
               style="background: #558A16;" >Usuarios Guardia</button></a>
               </div>
             <div class="col-md-2">
@@ -84,7 +84,7 @@
               style="background: #558A16;"
               data-toggle="modal"
               data-target="#modalReservacion"
-            >Registrar Usuario Guardia</button>
+            >Registrar Usuario Administrador</button>
           </div>
         </div>
         <table class="table-style table table-striped" style="width:70vw; text-align:left">
@@ -93,6 +93,7 @@
               <th>Usuario</th>
               <th>Correo</th>
               <th>Tipo Usuario</th>
+              <th>Estado</th>
               <th>Acceso</th>
               <th>Opciones</th>
             </tr>
@@ -102,6 +103,7 @@
             <td>{{user.name}}</td>
             <td>{{user.email}}</td>
             <td>{{user.role}}</td>
+            <td>{{user.status}}</td>
             <td><span>Acceso Total</span></td>
             <td><div style="width:100px;"><button style="font-size:13px" class="btn btn-info" @click="getUserToEdit(user.uid)"><i class="fa fa-edit"></i></button>
             <button style="font-size:13px; margin-left:10px" class="btn btn-danger" @click="deleteUser(user.uid)"><i class="fa fa-trash"></i></button></div></td>
@@ -123,7 +125,7 @@
             <form @submit.prevent="addUser">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Nuevo Usuario Guardia</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Nuevo Usuario Administrador</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -136,20 +138,24 @@
                   <input  class="form-control col-md-6" v-model="newUser.name" name="name" type="text">
                 </div>
                 <div class="form-group row" style="padding:15px">
+                  <label for="" class="col-md-12">Telefono</label>
+                  <input  class="form-control col-md-12" required v-model="newUser.telephone" type="number">
+                </div>
+                <div class="form-group row" style="padding:15px">
                   <label for="" class="col-md-12">Email</label>
                   <input  class="form-control col-md-12" v-model="newUser.email" name="email" type="email">
                 </div>
                 <div class="form-group row" style="padding:15px">
                   <label for="" class="col-md-12">Password</label>
-                  <input  class="form-control col-md-12" v-model="newUser.password" name="password" type="password">
+                  <input  class="form-control col-md-6" required minlength="8" placeholder="Contraseña"  maxlength="40" required pattern="[A-Za-z0-9]+" v-model="newUser.password" name="password" type="password">
+                  <input  class="form-control col-md-6" required minlength="8" placeholder="Confirmar Contraseña" maxlength="40" required pattern="[A-Za-z0-9]+" v-model="newUser.passwordConfirm" name="password" type="password">
+                  <p style="color:orange" v-if="newUser.passwordConfirm != newUser.password">Las contraseñas no coinciden</p>
+                  <p style="color:green" v-if="newUser.passwordConfirm == newUser.password">Las contraseñas coinciden</p>
                 </div>
                 <div class="form-group">
-                  <label for="">Turno</label>
-                  <select class="form-control" v-model="newUser.turno" name="" id="">
-                    <option value="Mañana">Mañana</option>
-                    <option value="Tarde">Tarde</option>
-                    <option value="Noche">Noche</option>
-                  </select>
+                  <label for="">Puesto</label>
+                  <input type="text" class="form-control" v-model="newUser.turno" >
+                   
                 </div>
                
                 
@@ -195,7 +201,35 @@
                   <label for="" class="col-md-12">Email</label>
                   <input  class="form-control col-md-12" v-model="updateUserData.email" name="email" type="email">
                 </div>
-               
+                <div class="form-group">
+                  <select v-model="updateUserData.status" class="form-control">
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                  </select>
+                </div>
+               <div class="form-group">
+               <label>Permisos Generales</label>
+               <table style="width:100%">
+               <tr>
+                <td><input type="checkbox" checked> Dashboard</td>
+                </tr>
+               <tr>
+                <td><input type="checkbox" checked> Usuarios</td>
+                </tr>
+               <tr>
+                <td><input type="checkbox" checked> Areas</td>
+               </tr>
+               <tr>
+                <td><input type="checkbox" checked> Reservaciones</td>
+               </tr>
+               <tr>
+                <td><input type="checkbox" checked> Noticias</td>
+               </tr>
+               <tr>
+                <td><input type="checkbox" checked> Dashboard</td>
+               </tr>
+               </table>
+               </div>
                 
               
               
@@ -230,6 +264,7 @@ export default {
         email:null,
         uid:null,
         turno:null,
+        status:null,
       },
       newUser:[],
       userID:'',
@@ -289,8 +324,9 @@ export default {
         email:this.newUser.email,
         turno:this.newUser.turno,
         completeProfile:false,
+        status:'Activo',
         uid:Math.random().toString(36).substring(7),
-        role:'Guardia',
+        role:'Administrador',
         terms:false,
       }).then( ()=> this.getUsers(), this.$swal('Registro Exitoso!'), $('#modalReservacion').modal('hide'))
                     
@@ -321,11 +357,15 @@ export default {
       db.collection('users').doc(id).update({
         name:this.updateUserData.name,
         email:this.updateUserData.email,
+        status:this.updateUserData.status,
       }).then( ()=> this.getUsers(), this.$swal('Usuario Actualizado Con Exito!'), $('#modalEditar').modal('hide'))
 
     }
   },
 };
+
+
+
 </script>
 
 

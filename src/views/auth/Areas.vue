@@ -119,7 +119,9 @@
               <div v-for="area in areas" :key="area.id" class="list-element" @click="getAreaToEdit(area.id)">
                 <div v-if="area.status" class="status-d"></div>
                 <div v-else class="status-nd"></div>
-                <span>{{area.name}}</span></div>
+                <span>{{area.name}}</span><br>
+                <span v-if="area.status" style="font-size:10px; font-style:italic">Activa</span>
+                <span v-else style="font-size:10px; font-style:italic">Inctiva</span></div>
             </div>
           </div>
           <div class="col-md-8">
@@ -176,10 +178,13 @@
                       <input class="form-control" placeholder="Numero de personas*" v-model="newArea.capacidad" type="number" id="numeroPersonas" min="1" name="numeroPersonas">
                   </div>
 
-                  <div class="form-group row" style="padding:15px">
-                  <label for="" class="col-md-12">Caracteristica</label>
-                  <input  class="form-control col-md-6" name="nuevaCaracteristica" placeholder="Caracteristica" v-model="newArea.caracteristica" type="text">
-                </div>
+                  <div class="form-grup">
+                  <label for="exampleInputEmail1">Caracteristicas</label><br>
+                  <input v-model="nuevaCaracteristica"> <div @click="AgregarCaracteristica()" class="btn btn-info" style="font-size:20px; padding:0px 10px">+</div>
+                  <ul>
+                  <li v-for="caracteristica in caracteristicas" :key="caracteristica.id">{{caracteristica}}</li>
+                  </ul>
+                  </div>
                 
               
               
@@ -284,9 +289,32 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="">Coordenadas</label>
-                    <input class="form-control" type="text" v-model="updateAreaData.ubication" >
+                    <label for="">Caracteristicas</label>
+                    <ul>
+                  <li v-for="caracteristica in updateAreaData.caracteristicas" :key="caracteristica.id">{{caracteristica}}</li>
+                  </ul>
                   </div>
+
+                   <div class="form-group">
+                   <label for="">Activar / Desactivar</label>
+                  <select v-model="updateAreaData.status" class="form-control">
+                    <option value="1">Activo</option>
+                    <option value="2">Inactivo</option>
+                    <option value="3">Inactivo Indefinidamente</option>
+                  </select>
+                </div>
+
+                <div v-if="updateAreaData.status=='2'" class="row form-group" style="padding:15px">
+                   <label class="col-md-6" for="">Desde</label>
+                   <label class="col-md-6" for="">Hasta</label>
+                   <input class="form-control col-md-6" type="date">
+                   <input class="form-control col-md-6" type="date">
+                   <label class=" col-md-12">Motivo de inactividad</label>
+                   <textarea class="form-control col-md-12"></textarea>
+                
+                </div>
+                
+
 
                   <div class="form-group">
                     <label for="">Fotos</label>
@@ -330,12 +358,15 @@ export default {
     return {
       moment: moment,
       reservations: [],
+      nuevaCaracteristica:null,
+      caracteristicas:[],
       areas: [],
       users: [],
       newArea:[],
       areaSelect: [],
       updateAreaData:{
         name:'',
+        caracteristicas:'',
         email:'',
         id:'',
         image:'',
@@ -358,6 +389,10 @@ export default {
     this.getAreas();
   },
   methods: {
+    AgregarCaracteristica(){
+      this.caracteristicas.push(this.nuevaCaracteristica);
+      this.nuevaCaracteristica='';
+    },
     async getReservations() {
       this.reservations = [];
       try {
@@ -403,12 +438,13 @@ getAreaToEdit(id){
               this.areaSelect.push(res.data());
               //console.log(this.userSelect[0].name);
               this.updateAreaData.name=this.areaSelect[0].name;
+              this.updateAreaData.caracteristicas=this.areaSelect[0].caracteristicas;
               this.updateAreaData.email=this.areaSelect[0].description;
               this.updateAreaData.id=this.areaSelect[0].id;
+              this.updateAreaData.status=this.areaSelect[0].status;
               this.updateAreaData.image=this.areaSelect[0].image;
               this.updateAreaData.capacidad=this.areaSelect[0].capacidad;
               this.updateAreaData.description=this.areaSelect[0].description;
-              this.updateAreaData.status=this.areaSelect[0].status;
               $('#modalFicha').modal('show')
             });
           });
@@ -417,7 +453,7 @@ getAreaToEdit(id){
 
       let response = db.collection("ubications").add({
         name:this.newArea.name,
-        caracteristica:this.newArea.caracteristica,
+        caracteristicas:this.caracteristicas,
         description:this.newArea.descripcion,
         image:"https://concepto.de/wp-content/uploads/2018/09/desierto2-e1537800205712.jpg",
         status:true,
@@ -431,7 +467,8 @@ getAreaToEdit(id){
         name:this.updateAreaData.name,
         capacidad:this.updateAreaData.capacidad,
         description:this.updateAreaData.description,
-      }).then( ()=> this.getUsers(), this.$swal('Area Actualizads Con Exito!'))
+        status:this.updateAreaData.status,
+      }).then( ()=> this.getUsers(), this.$swal('Area Actualizada Con Exito!'))
 
     },
     deleteArea(id){

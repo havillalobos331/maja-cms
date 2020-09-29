@@ -61,16 +61,16 @@
       <div class="table-container">
         <div class="row">
           <div class="col-md-2">
-            <a href="users">
+            <a href="#/users">
           <button class="btn btn-info"
               style="background: #558A16;">Usuarios Aplicación</button></a>
               </div>
               <div class="col-md-2">
-          <a href="usersSec"><button class="btn btn-info"
+          <a href="#/usersSec"><button class="btn btn-info"
               style="background: #558A16;" disabled>Usuarios Guardia</button></a>
               </div>
             <div class="col-md-2">
-          <a href="usersAdmin"><button class="btn btn-info"
+          <a href="#/usersAdmin"><button class="btn btn-info"
               style="background: #558A16;">Usuarios Administrador</button></a>
               </div>
         </div>
@@ -93,6 +93,7 @@
               <th>Usuario</th>
               <th>Correo</th>
               <th>Tipo Usuario</th>
+              <th>Estado</th>
               <th>Turno</th>
               <th>Opciones</th>
             </tr>
@@ -102,6 +103,7 @@
             <td>{{user.name}}</td>
             <td>{{user.email}}</td>
             <td>{{user.role}}</td>
+            <td>{{user.status}}</td>
             <td><span v-if="user.turno">Completo</span><span v-else>Pendiente</span></td>
             <td><div style="width:100px;"><button style="font-size:13px" class="btn btn-info" @click="getUserToEdit(user.uid)"><i class="fa fa-edit"></i></button>
             <button style="font-size:13px; margin-left:10px" class="btn btn-danger" @click="deleteUser(user.uid)"><i class="fa fa-trash"></i></button></div></td>
@@ -133,15 +135,22 @@
               
                 <div class="form-group row" style="padding:15px">
                   <label for="" class="col-md-12">Nombre Usuario</label>
-                  <input  class="form-control col-md-6" v-model="newUser.name" name="name" type="text">
+                  <input  class="form-control col-md-6" required v-model="newUser.name" name="name" type="text">
+                </div>
+                <div class="form-group row" style="padding:15px">
+                  <label for="" class="col-md-12">Telefono</label>
+                  <input  class="form-control col-md-12" required v-model="newUser.telephone" type="number">
                 </div>
                 <div class="form-group row" style="padding:15px">
                   <label for="" class="col-md-12">Email</label>
-                  <input  class="form-control col-md-12" v-model="newUser.email" name="email" type="email">
+                  <input  class="form-control col-md-12" required v-model="newUser.email" name="email" type="email">
                 </div>
                 <div class="form-group row" style="padding:15px">
                   <label for="" class="col-md-12">Password</label>
-                  <input  class="form-control col-md-12" v-model="newUser.password" name="password" type="password">
+                  <input  class="form-control col-md-6" required minlength="5" placeholder="Contraseña"  maxlength="40" required pattern="[A-Za-z0-9]+" v-model="newUser.password" name="password" type="password">
+                  <input  class="form-control col-md-6" required minlength="5" placeholder="Confirmar Contraseña" maxlength="40" required pattern="[A-Za-z0-9]+" v-model="newUser.passwordConfirm" name="password" type="password">
+                  <p style="color:orange" v-if="newUser.passwordConfirm != newUser.password">Las contraseñas no coinciden</p>
+                  <p style="color:green" v-if="newUser.passwordConfirm == newUser.password">Las contraseñas coinciden</p>
                 </div>
                 <div class="form-group">
                   <label for="">Turno</label>
@@ -167,7 +176,7 @@
       <!-- Fin Modal -->
 
       <!-- Modal Editar Usuario-->
-      <div
+       <div
         class="modal fade"
         id="modalEditar"
         tabindex="-1"
@@ -194,6 +203,16 @@
                 <div class="form-group row" style="padding:15px">
                   <label for="" class="col-md-12">Email</label>
                   <input  class="form-control col-md-12" v-model="updateUserData.email" name="email" type="email">
+                </div>
+                <div class="form-group row" style="padding:15px">
+                  <label for="" class="col-md-12">Telefono</label>
+                  <input  class="form-control col-md-12" v-model="updateUserData.telephone" type="number">
+                </div>
+                <div class="form-group">
+                  <select v-model="updateUserData.status" class="form-control">
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                  </select>
                 </div>
                
                 
@@ -230,6 +249,8 @@ export default {
         email:null,
         uid:null,
         turno:null,
+        status:null,
+        telephone:null,
       },
       newUser:[],
       userID:'',
@@ -288,6 +309,7 @@ export default {
         name:this.newUser.name,
         email:this.newUser.email,
         turno:this.newUser.turno,
+        telephone:this.newUser.telephone,
         completeProfile:false,
         uid:Math.random().toString(36).substring(7),
         role:'Guardia',
@@ -321,6 +343,7 @@ export default {
       db.collection('users').doc(id).update({
         name:this.updateUserData.name,
         email:this.updateUserData.email,
+        status:this.updateUserData.status,
       }).then( ()=> this.getUsers(), this.$swal('Usuario Actualizado Con Exito!'), $('#modalEditar').modal('hide'))
 
     }
