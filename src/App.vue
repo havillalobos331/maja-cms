@@ -3,7 +3,7 @@
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
-      <button @click="submit()">correo</button>
+      <button @click="submit(1234)">correo</button>
     </div>
     <router-view/>
   </div>
@@ -34,7 +34,7 @@
 </style>
 
 <script>
-
+import firebase from "firebase";
 import axios from 'axios';
 var QRCode = require('qrcode');
 
@@ -43,6 +43,8 @@ var QRCode = require('qrcode');
 export default {
   data(){
     return{
+        picture: null,
+        imagedata: null,
         user:{
             email: '',
             password: '',
@@ -59,23 +61,34 @@ export default {
             child: '0',
             vehicleName: 'ford escape 2006',
             vehiclePlate: '12345',
-            activity: 'acampar'}
+            activity: 'acampar',
+            qr:''}
         }
     }
   },
   methods:{
-      async submit(){
-
-
+      async submit(id){
             try {
-                QRCode.toString('I am a pony!',{type:'terminal'}, function (err, url) {
-                  console.log(url)
-                })
+                let imgName = 'resv_'+id+'.png';
+                let storageRef = null;
+                QRCode.toDataURL('http://www.google.com', function (err, string) {
+                  if (err) throw err
+                  storageRef= firebase.storage().ref().child('qr/'+imgName).putString(string, 'data_url').then(function(snapshot) {
+                    snapshot.ref.getDownloadURL().then((url)=>{
+                    console.log(url);
+                    //le asignamos la url de la foto que se subio a la variable
+                    this.request.data.qr = url;
+                    //Este alert arroja el url de la imagen, lo deje como indicador pero hay que comentarlo para que no afecte la experiencia de usuario
+                    alert(this.picture);
+                    });
+                  });
+                });
+
                 let response = await axios.post('http://localhost:4000/mail', this.request);
                 console.log(response)
                 alert("Registration Was successful");
-                this.loader = false;
             } catch (err) {
+                console.log(err);
                 alert("Something Went Wrong");
             }
       }
